@@ -11,6 +11,11 @@ def get_hash(name):
         data += f.read(readsize)
     return hashlib.md5(data).hexdigest()
 
-req=urllib.request.Request("http://api.thesubdb.com/?action=search&hash="+get_hash(sys.argv[1])+"[&versions]",headers={"User-Agent" : "SubDB/1.0 (subdb/0.1; http://github.com/JulianHurst/subdb"})
+req=urllib.request.Request("http://api.thesubdb.com/?action=search&hash="+get_hash(sys.argv[1]),headers={"User-Agent" : "SubDB/1.0 (subdb/0.1; http://github.com/JulianHurst/subdb"})
 data=urllib.request.urlopen(req)
-print(data)
+print(data.read().decode('utf-8'))
+lang=input("Choose one of the available languages : ")
+req=urllib.request.Request("http://api.thesubdb.com/?action=download&hash="+get_hash(sys.argv[1])+"&language="+lang,headers={"User-Agent" : "SubDB/1.0 (subdb/0.1; http://github.com/JulianHurst/subdb"})
+data=urllib.request.urlopen(req)
+with open(os.path.splitext(sys.argv[1])[0]+".srt","w+") as f:
+    f.write(data.read().decode('utf-8'))
